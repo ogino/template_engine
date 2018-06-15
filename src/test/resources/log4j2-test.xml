@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="Jetty" >
+
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_ERR">
+            <PatternLayout>
+                <Pattern>%d{MM/dd HH:mm:ss} %-5p [%c] %m%n</Pattern>
+            </PatternLayout>
+        </Console>
+        <RollingFile name="FILE" fileName="./logs/test.log" filePattern="./logs/test_%d{yyyyMMdd}-%i.log.zip">
+            <PatternLayout>
+                <Pattern>%d{MM/dd HH:mm:ss} %-5p [%c] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="log4jdbc" level="DEBUG" additivity="FALSE">
+            <MarkerFilter marker="LOG4JDBC_NON_STATEMENT" onMatch="DENY" onMismatch="NEUTRAL"/>
+            <!--
+            <MarkerFilter marker="LOG4JDBC_OTHER" onMatch="DENY" onMismatch="NEUTRAL"/>
+            -->
+            <AppenderRef ref="CONSOLE" level="DEBUG"/>
+            <AppenderRef ref="FILE" level="INFO"/>
+        </Logger>
+        <logger name="template" level="DEBUG" additivity="FALSE">
+            <AppenderRef ref="CONSOLE" level="DEBUG"/>
+            <AppenderRef ref="FILE" />
+        </logger>
+        <Root level="DEBUG">
+            <AppenderRef ref="CONSOLE" level="DEBUG"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
+

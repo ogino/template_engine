@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_ERR">
+            <PatternLayout>
+                <Pattern>%d{MM/dd HH:mm:ss} %-5p [%c] %m%n</Pattern>
+            </PatternLayout>
+        </Console>
+
+        <RollingFile name="TOMCAT_FILE"
+                     fileName="${sys:catalina.home}/logs/tomcat.log"
+                     filePattern="${sys:catalina.home}/logs/tomcat-%d{MM-dd-yyyy}.log.zip"
+                     ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>%d{MM/dd HH:mm:ss} %-5p [%c] %m%n</Pattern>
+            </PatternLayout>
+            <SizeBasedTriggeringPolicy size="10MB"/>
+            <DefaultRolloverStrategy compressionLevel="9" max="365"/>
+        </RollingFile>
+
+        <RollingFile name="TOMCAT_ERROR_FILE"
+                     fileName="${sys:catalina.home}/logs/tomcat-error.log"
+                     filePattern="${sys:catalina.home}/logs/error-tomcat-%d{MM-dd-yyyy}.log.zip"
+                     ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
+            </PatternLayout>
+            <SizeBasedTriggeringPolicy size="10MB"/>
+            <DefaultRolloverStrategy compressionLevel="9" max="365"/>
+        </RollingFile>
+
+        <RollingFile name="FILE"
+                     fileName="${sys:catalina.home}/logs/tomcat.log"
+                     filePattern="${sys:catalina.home}/logs/tomcat-%d{MM-dd-yyyy}.log.zip"
+                     ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>%d{MM/dd HH:mm:ss} %-5p [%c] %m%n</Pattern>
+            </PatternLayout>
+            <SizeBasedTriggeringPolicy size="10MB"/>
+            <DefaultRolloverStrategy compressionLevel="9" max="365"/>
+        </RollingFile>
+
+        <RollingFile name="ERROR_FILE"
+                     fileName="${sys:catalina.home}/logs/tomcat-error.log"
+                     filePattern="${sys:catalina.home}/logs/error-tomcat-%d{MM-dd-yyyy}.log.zip"
+                     ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
+            </PatternLayout>
+            <SizeBasedTriggeringPolicy size="10MB"/>
+            <DefaultRolloverStrategy compressionLevel="9" max="365"/>
+        </RollingFile>
+
+        <SMTP name="MAIL" subject="[JOFI]SaaS CMS service. - tomcat Error" to="miyabi@JOFI.jp"
+              from="miyabi@jofi.jp" smtpHost="localhost" smtpPort="25" bufferSize="50">
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>%d{MM/dd HH:mm:ss} %-5p [%c] %m%n</Pattern>
+            </PatternLayout>
+        </SMTP>
+
+    </Appenders>
+
+    <Loggers>
+        <Logger name="log4jdbc" level="INFO" additivity="FALSE">
+            <MarkerFilter marker="LOG4JDBC_NON_STATEMENT" onMatch="DENY" onMismatch="NEUTRAL"/>
+            <!--
+            <MarkerFilter marker="LOG4JDBC_OTHER" onMatch="DENY" onMismatch="NEUTRAL"/>
+            -->
+            <AppenderRef ref="FILE"/>
+            <AppenderRef ref="ERROR_FILE" level="ERROR"/>
+        </Logger>
+        <logger name="template" level="DEBUG" additivity="FALSE">
+            <AppenderRef ref="FILE" level="INFO"/>
+            <AppenderRef ref="ERROR_FILE" level="ERROR" />
+            <AppenderRef ref="MAIL" level="ERROR"/>
+        </logger>
+        <Root level="INFO">
+            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="TOMCAT_FILE" level="INFO"/>
+            <AppenderRef ref="TOMCAT_ERROR_FILE" level="ERROR" />
+        </Root>
+    </Loggers>
+
+</Configuration>
+
